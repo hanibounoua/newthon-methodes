@@ -1,6 +1,3 @@
-
-
-
 def Newton_root_Algorithm(x_0, fun, dx, threshold):
     y = []
     dydx = []
@@ -18,7 +15,6 @@ def Newton_root_Algorithm(x_0, fun, dx, threshold):
         else:
             i += 1
     return {"x": x, "Function Values": y, "First derrivative repect to x values": dydx}
-
 
 def Newton_optimization_algrithm(x_0, fun, dfdx, ddfddx, learningRate, threshold):
     y = []
@@ -40,3 +36,28 @@ def Newton_optimization_algrithm(x_0, fun, dfdx, ddfddx, learningRate, threshold
         else:
             i += 1
     return {"x": x, "Function Values": y, "Tangent Slope": dydx}
+
+def W_Newton_root_Algorithm(x_0, fun, dx, threshold , lr=1,max_ittr=1000):
+    y = fun(x_0)
+    dydx = dx(x_0)
+    x = x_0
+    i = 0
+    while abs(y)>threshold:
+        x=(x - lr * y/dydx)
+        y=(fun(x))
+        dydx=(dx(x))
+        i += 1
+        if i > max_ittr:
+            print("couldn't converge")
+            break
+    return x
+
+def W_Newton_optimization_algrithm(x_0, fun, dfdx, ddfddx, learningRate, threshold):
+    xm=W_Newton_root_Algorithm(x_0,dfdx,ddfddx,threshold,learningRate)
+    if ddfddx(xm)>threshold:
+        x_type='minima'
+    elif ddfddx(xm)<-threshold:
+        x_type='maxima'
+    else:
+        x_type='saddle'
+    return {"x":xm,"f(x)":fun(xm),"point_type":x_type}
